@@ -14,7 +14,7 @@ function oclintForProject () {
     xcodebuild clean
 
     # 生成编译数据
-    xcodebuild -workspace cardloan.xcworkspace -scheme cardloan -sdk iphonesimulator -derivedDataPath derivedData -configuration Debug | xcpretty -r json-compilation-database -o compile_commands.json
+    xcodebuild -workspace cardloan.xcworkspace -scheme cardloan -sdk iphonesimulator -derivedDataPath derivedData -configuration Debug COMPILER_INDEX_STORE_ENABLE=NO | xcpretty -r json-compilation-database -o compile_commands.json
 
     if [ -f ./compile_commands.json ]
     then
