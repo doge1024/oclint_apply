@@ -33,7 +33,7 @@ function oclintForProject () {
 	echo '-----开始编译-----'
 
 	# 生成编译数据
-	xcodebuild -workspace ${myworkspace} -scheme ${myscheme} -sdk iphonesimulator -derivedDataPath ./build/derivedData -configuration Debug | xcpretty -r json-compilation-database -o compile_commands.json
+	xcodebuild -workspace ${myworkspace} -scheme ${myscheme} -sdk iphonesimulator -derivedDataPath ./build/derivedData -configuration Debug COMPILER_INDEX_STORE_ENABLE=NO | xcpretty -r json-compilation-database -o compile_commands.json
 	
 
 	if [ -f ./compile_commands.json ]
