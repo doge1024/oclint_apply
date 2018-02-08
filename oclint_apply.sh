@@ -10,16 +10,34 @@ export LC_NUMERIC="zh_CN.UTF-8"
 export LC_TIME="zh_CN.UTF-8"
 export LC_ALL=
 
+function checkDepend () {
+	command -v xcpretty >/dev/null 2>&1 || { 
+		echo >&2 "I require xcpretty but it's not installed.  Install：gem install xcpretty"; 
+		exit
+		}
+	command -v oclint-json-compilation-database >/dev/null 2>&1 || { 
+		echo >&2 "I require oclint-json-compilation-database but it's not installed.  Install：brew install oclint"; 
+		exit
+		}
+}
 
 function oclintForProject () {
 
+	# 检测依赖
+	checkDepend
+
 	projectName=$1
 	scheme=$2
+    reportType=$3
+
+    REPORT_PMD="pmd"
+    REPORT_XCODE="xcode"
 	
 	myworkspace=${projectName}
 	myscheme=${scheme} 
 	echo "myworkspace是：${myworkspace}"
 	echo "myscheme是：${myscheme}"
+	echo "reportType为：${reportType}"
 
 	# 清除上次编译数据
 	if [ -d ./build/derivedData ]; then
@@ -47,7 +65,7 @@ function oclintForProject () {
 	echo '-----分析中-----'
 
 	# 自定义排除警告的目录，将目录字符串加到数组里面
-	# -e Debug.m -e Port.m -e Test
+	# 转化为：-e Debug.m -e Port.m -e Test
 	exclude_files=("cardloan_js" "Pods")
 
 	exclude=""
@@ -56,9 +74,17 @@ function oclintForProject () {
 	done
 	echo "排除目录：${exclude}"
 
+    # 分析reportType
+    if [[ ${reportType} =~ ${REPORT_PMD} ]] 
+        then
+		nowReportType="pmd -o pmd.xml"
+	else    
+		nowReportType="xcode"
+	fi
+
 	# 生成报表
 	oclint-json-compilation-database ${exclude} -- \
-	-report-type xcode \
+	-report-type ${nowReportType} \
 	-rc LONG_LINE=200 \
 	-disable-rule ShortVariableName \
 	-disable-rule ObjCAssignIvarOutsideAccessors \
@@ -67,13 +93,22 @@ function oclintForProject () {
 	-max-priority-2=100000 \
 	-max-priority-3=100000
 
-	rm compile_commands.json
-	echo '-----分析完毕-----'
-	return 0
+    rm compile_commands.json
+    if [[ ${reportType} =~ ${REPORT_PMD} ]] && [ ! -f ./pmd.xml ]
+    then
+        echo "-----分析失败-----"
+		return -1
+    else
+	    echo '-----分析完毕-----'
+	    return 0
+    fi
 }
 
 # 替换workspace的名字
 myworkspace="cardloan.xcworkspace" 
 # 替换scheme的名字
 myscheme="cardloan" 
-oclintForProject ${myworkspace} ${myscheme}
+# 输出方式 xcode/pmd
+reportType="xcode"
+
+oclintForProject ${myworkspace} ${myscheme} ${reportType}
