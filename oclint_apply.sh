@@ -77,14 +77,16 @@ function oclintForProject () {
     # 分析reportType
     if [[ ${reportType} =~ ${REPORT_PMD} ]] 
         then
-		nowReportType="pmd -o pmd.xml"
+		nowReportType="-report-type pmd -o pmd.xml"
 	else    
-		nowReportType="xcode"
+		nowReportType="-report-type xcode"
 	fi
+	# 自定义report 如：
+	# nowReportType="-report-type html -o oclint_result.html"
 
 	# 生成报表
 	oclint-json-compilation-database ${exclude} -- \
-	-report-type ${nowReportType} \
+	${nowReportType} \
 	-rc LONG_LINE=200 \
 	-disable-rule ShortVariableName \
 	-disable-rule ObjCAssignIvarOutsideAccessors \
