@@ -4,9 +4,9 @@
 
 ```
 # 替换workspace的名字
-myworkspace="cardloan.xcworkspace" 
+myworkspace="test.xcworkspace" 
 # 替换scheme的名字
-myscheme="cardloan" 
+myscheme="test" 
 # 输出方式 xcode/pmd/html
 reportType="xcode"
 
@@ -14,7 +14,7 @@ reportType="xcode"
 nowReportType="-report-type html -o oclint_result.html"
 
 # 自定义排除警告的目录，将目录字符串加到数组里面，结果中将不会含有Pods文件夹下文件编译警告
-exclude_files=("cardloan_js" "Pods")
+exclude_files=("test_js" "Pods")
 ```
 
 1. Using OCLint in Xcode => 输出方式 xcode
