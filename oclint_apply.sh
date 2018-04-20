@@ -107,9 +107,9 @@ function oclintForProject () {
 }
 
 # 替换workspace的名字
-myworkspace="cardloan.xcworkspace" 
+myworkspace="test.xcworkspace" 
 # 替换scheme的名字
-myscheme="cardloan" 
+myscheme="test" 
 # 输出方式 xcode/pmd
 reportType="xcode"
 
