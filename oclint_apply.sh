@@ -32,6 +32,7 @@ function oclintForProject () {
 
     REPORT_PMD="pmd"
     REPORT_XCODE="xcode"
+	REPORT_HTML="html"
 	
 	myworkspace=${projectName}
 	myscheme=${scheme} 
@@ -75,12 +76,16 @@ function oclintForProject () {
 	echo "排除目录：${exclude}"
 
     # 分析reportType
-    if [[ ${reportType} =~ ${REPORT_PMD} ]] 
-        then
+	if [[ ${reportType} =~ ${REPORT_PMD} ]]  
+	then
 		nowReportType="-report-type pmd -o pmd.xml"
-	else    
+	elif [[ ${reportType} =~ ${REPORT_HTML} ]] 
+	then
+		nowReportType="-report-type html -o oclint_result.html"	
+	else
 		nowReportType="-report-type xcode"
 	fi
+
 	# 自定义report 如：
 	# nowReportType="-report-type html -o oclint_result.html"
 
